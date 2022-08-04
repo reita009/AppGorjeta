@@ -3,6 +3,8 @@ import styled from "styled-components/native";
 import { View,Text,Button } from "react-native";
 import { useState } from "react";
 
+
+//-----Componentes--------//
 const Page = styled.SafeAreaView`
   flex:1 ;
   align-items:center ;
@@ -19,9 +21,41 @@ const Input = styled.TextInput`
   border-radius:10px;
   padding:10px;
 `;
+const BtnCalc = styled.Button`
+  height:25px;
+  padding:5px;
+  margin-top:25px;
+`;
+const ResultArea = styled.View`
+  margin-top:30px;
+  background-color:#EEE;
+  padding:20px;
+  justify-content:center;
+  align-items:center;
+`;
+const ResultItemTitle = styled.Text`
+  font-size:18px;
+  font-weight:bold;
+`;
+const ResultItem = styled.Text`
+  font-size:15px;
+  margin-bottom:30px;
+`;
 
 export default ()=>{
+  //------Logica do App----------//
   const [bill,setBill] = useState('');
+  const [tips, setTips] = useState(0);
+
+  const calc = () =>{
+    let nBill = parseFloat(bill);
+    if(nBill){
+      setTips( (10/100) * nBill); 
+    }else{
+      alert("Digite o valor da conta")
+    }
+
+  }
   return(
     <>
       <Page>
@@ -29,8 +63,22 @@ export default ()=>{
           <Input placeholder="Quanto deu a conta?"
             keyboardType="numeric"
             value={ bill }
-            onChange={ n => setBill(n) }
+            onChangeText={ n => setBill(n) }
           />
+          <BtnCalc title="Calcular" onPress={ calc }/>
+
+          {tips > 0 &&
+             <ResultArea>
+             <ResultItemTitle>Valor da Conta</ResultItemTitle>
+             <ResultItem>R$ { parseFloat(bill).toFixed(2) }</ResultItem>
+ 
+             <ResultItemTitle>Valor da Gorjeta</ResultItemTitle>
+             <ResultItem>R$ { tips.toFixed(2) } (10%)</ResultItem>
+ 
+             <ResultItemTitle>Valor Total</ResultItemTitle>
+             <ResultItem>R$ {(parseFloat(bill) + tips).toFixed(2)}</ResultItem>
+           </ResultArea>
+          }
       </Page>
     </>
   )
